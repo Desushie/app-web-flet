@@ -12,7 +12,7 @@ from view import ShowMenu, PostText, ChangeRoute, LogUserOut
 def _view_(first_name:str, last_name:str):
     return View(
         "/index",
-        bgcolor="white54",
+        bgcolor="#fcefe3",
         controls=[
             Column(
                 expand=True,
@@ -25,7 +25,7 @@ def _view_(first_name:str, last_name:str):
                                 controls=[
                                     Container(
                                         margin=-10,
-                                        bgcolor="#1d1d1d",
+                                        bgcolor="#a47551",
                                         width=68,
                                         expand=True,
                                         animate=animation.Animation(350,"decelerate"),

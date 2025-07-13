@@ -8,7 +8,7 @@ from view import ShowMenu, ChangeRoute, LogUserOut
 def _view_(created_on, last_login, first_name, last_name, email):
     return View(
         "/profile",
-        bgcolor="white54",
+        bgcolor="#fcefe3",
         controls=[
             Column(
                 expand=True,
@@ -21,7 +21,7 @@ def _view_(created_on, last_login, first_name, last_name, email):
                                 controls=[
                                     Container(
                                         margin=-10,
-                                        bgcolor="#1d1d1d",
+                                        bgcolor="#a47551",
                                         width=68,
                                         expand=True,
                                         animate=animation.Animation(350,"decelerate"),

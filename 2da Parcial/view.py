@@ -118,11 +118,13 @@ def ProfileUserData():
     return user_info
 
 # Ahora que el enrutamiento funciona, creamos un usuario con el formulario de registro
+# Esta función será activada cuando el usuario apriete el botón de registrarse en la pagina de registro
 def RegisterUser(e):
     # Aca, debemos de circular a través de la lista de vistas y elegir la pagina de registro
     for page in e.page.views[:]:
         if page.route == "/register": #page.route es el nombre de la vista
             # Aqui, debemos de acceder a los text fields
+            # res ahora está en la columna principal con la entrada
             res = page.controls[0].controls[0].content.controls[4]
             # Obtenemos los campos para validar
             fields_to_validate = [
@@ -131,8 +133,9 @@ def RegisterUser(e):
                 res.controls[2].content,  # Correo
                 res.controls[3].content,  # Contraseña
             ]
-
-            # Eliminamos validación aquí
+            # Validamos los campos
+            if not ValidateFields(fields_to_validate):
+                return # Paramos la ejecución si algún campo está vacío
 
             email = res.controls[2].content.value
             if AccountExists(email): # Revisamos si la cuenta existe en la base de datos
@@ -155,6 +158,8 @@ def RegisterUser(e):
                 }
 
                 # Usamos child para enviar la información al nodo especifico de la base de datos
+                # Nota: Antes de escribir a la base de datos, hay que cambiar las reglas de privacidad
+                # En nuestro caso está bien, pero para una aplicación de verdad se necesesitaría más parámetros de seguridad para las reglas de la base de datos
                 db.child("users").push(data)
                 e.page.views.clear()
                 e.page.views.append(_moduleList["/login"].loader.load_module()._view_())
@@ -172,8 +177,9 @@ def LogInUser(e):
                 res.controls[0].content,  # Correo
                 res.controls[1].content,  # Contraseña
             ]
-
-            # Eliminamos validación aquí
+            # Validamos los campos
+            if not ValidateFields(fields_to_validate):
+                return # Paramos la ejecución si algún campo esta vacío
             
             email = res.controls[0].content.value
             password = res.controls[1].content.value
@@ -213,7 +219,6 @@ def LogInUser(e):
                         return
             except Exception as error:
                 print(error)
-
 
 # Crearemos otra funcion donde obtendremos y almacenaremos todos los datos importantes del usuario
 def GetUserDetail(e):

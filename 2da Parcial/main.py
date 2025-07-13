@@ -13,27 +13,12 @@ de esta manera podemos acceder a cada archivo llamandolo por su key.
 global _moduleList
 _moduleList = {}
 
-# Ruta absoluta a la carpeta 'paginas' (debe estar al lado de main.py)
-folder_path = os.path.join(os.path.dirname(__file__), "paginas")
-
-# Verificamos que la carpeta exista
-if os.path.isdir(folder_path):
-    for filename in os.listdir(folder_path):
-        _file = os.path.join(folder_path, filename)
-        if os.path.isfile(_file) and filename.endswith(".py"):
-            filename_without_ext = filename[:-3]
-            _moduleList["/" + filename_without_ext] = importlib.util.spec_from_file_location(
-                filename_without_ext, _file
-            )
-else:
-    print(f"La carpeta 'paginas' no fue encontrada: {folder_path}")
-
 # Usamos el método os.walk() para obtener el directorio raiz
 for _, dirs, __ in os.walk(r'./'):
     # El os.walk() retorna una tupla con tres items
     # raiz, directorios y archivos => solo nos interesan las carpetas, especificamente la carpeta llamada paginas
     for dir in dirs:
-        if dir == '/paginas': # Si la carpeta se llama paginas..
+        if dir == 'paginas': # Si la carpeta se llama paginas..
             for filename in os.listdir(dir): # Lista todos los nombres de archivos en la carpeta paginas
                 _file = os.path.join(dir, filename)
                 # Crea una ruta de archivo para cada archivo

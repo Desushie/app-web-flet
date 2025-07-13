@@ -10,17 +10,17 @@ def InputTextField(text, hide):
             height=48,
             width=300,
             text_size=12,
-            color="black",
+            color="#5c4033",
             border_radius=6,
-            bgcolor="#f0f3f6",
+            bgcolor="#fff2d8",
             border_color="transparent",
             filled=True,
-            cursor_color="black",
+            cursor_color="#5c4033",
             cursor_width=1,
             hint_text=text,
             hint_style=TextStyle(
                 size=11,
-                color="black",
+                color="#a47551",
             ),
             password=hide,
         ),
@@ -34,13 +34,20 @@ def SignInOption(btn_name, func):
                 btn_name,
                 size=11,
                 weight="bold",
+                color="#fffaf0"
             ),
             style=ButtonStyle(
                 shape={
                     "": RoundedRectangleBorder(radius=8),
                 },
                 color={
-                    "": "white",
+                    "": "#b85c38",
+                },
+                bgcolor={
+                    "": "#b85c38",
+                },
+                overlay_color={
+                    "": "#91442a",  # Más oscuro al hacer click
                 },
             ),
             height=42,
@@ -64,7 +71,7 @@ def GetFooter():
         footer_row.controls.append(
             Text(
                 item,
-                color="black",
+                color="#5c4033",
                 size=10,
                 weight="w500",
             )

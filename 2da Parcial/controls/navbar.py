@@ -15,24 +15,27 @@ class ModernNavBar(UserControl):
             width=100, 
             height=45, 
             border_radius=10, 
+            bgcolor="#fff2d8",
             on_click=func, #cambiar luego##
             on_hover=None,
             content=Row(
                 controls=[
                     IconButton( # Boton con icono
                         icon=icon_name,
-                        icon_size=18,
+                        icon_size=20,
+                        icon_color="#b85c38",
                         selected=False,
                         style=ButtonStyle(
                             shape={
                                 "": RoundedRectangleBorder(radius=7),
                             },
-                            overlay_color={"": "transparent"},
+                            overlay_color={"": "#e6b89c"},
                         ),
                     ),
                     Text( # Texto con descripción de pagina
                         value=text,
                         size=11,
+                        color="#5c4033",
                         opacity=1,
                         animate_opacity=200,
                     ),
@@ -44,6 +47,7 @@ class ModernNavBar(UserControl):
         return Container(
             alignment=alignment.center,
             padding=10,
+            bgcolor="#fcefe3",
             clip_behavior=ClipBehavior.HARD_EDGE,
             content=Column(
                 expand=True,
@@ -53,7 +57,7 @@ class ModernNavBar(UserControl):
                 controls=[
                     self.ContainedIcon(icons.HOME_FILLED, 'Home', self.func_home),
                     self.ContainedIcon(icons.DASHBOARD_ROUNDED, 'Perfil', self.func_profile),
-                    Divider(color="white",height=5),
+                    Divider(color="#d9b18e",height=5),
                     self.ContainedIcon(icons.LOGOUT_ROUNDED, 'Logout', self.func_logout),
                 ],
             ),

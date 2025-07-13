@@ -6,23 +6,23 @@ Esta aplicación tiene como funcionalidad principal la ***creación de notas tip
 Pasos para ejecutar:
 1. Ir al directorio donde esta el Dockerfile y el archivo main.py
 2. Ejecutar los siguientes comandos:
-    docker build -t fletapp .
+    docker build -t fletapp . <br/>
     docker run -p 8550:8550 fletapp
 3. Ir a http://localhost:8550/
 ## Capturas de pantalla de la ejecución y despliegue.
 - **Login**
-![Login](Capturas/login.png).
+![Login](Capturas/login.png)
 - **Registro**
-![Registro](Capturas/registro.png).
+![Registro](Capturas/registro.png)
 - **Index**
-![Index](Capturas/index.png).
+![Index](Capturas/index.png)
 - **Perfil**
-![Perfil](Capturas/perfil.png).
+![Perfil](Capturas/perfil.png)
 - **Despliegue**
-![Despliegue](Capturas/despliegue.png).
+![Despliegue](Capturas/despliegue.png)
 
 ## Link al sitio.
-[App de notas](//localhost:8550/).
+[App de notas](//localhost:8550/)
 
 ## Distribución del trabajo (integrantes).
 > Adaptación del proyecto original creado por Nicolás González

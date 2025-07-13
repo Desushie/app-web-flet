@@ -17,7 +17,7 @@ Todas las paginas deben tener el mismo nombre de la función para que la lógica
 def _view_():
     return View(
         "/register",
-        bgcolor='#fafafa',
+        bgcolor='#fcefe3',
         horizontal_alignment = CrossAxisAlignment.CENTER,
         vertical_alignment = MainAxisAlignment.CENTER,
         controls=[
@@ -29,8 +29,8 @@ def _view_():
                         width=350, 
                         height= 600,
                         border_radius=8,
-                        bgcolor="#ffffff",
-                        border=border.all(3,"#dbdbdb"),
+                        bgcolor="#fff6e5",
+                        border=border.all(3,"#d9b18e"),
                         alignment=alignment.center,
                         content=Column(
                             horizontal_alignment = CrossAxisAlignment.CENTER,
@@ -39,13 +39,13 @@ def _view_():
                                 Text(
                                     "Registro",
                                     size=26,
-                                    color="black",
+                                    color="#5c4033",
                                     weight="w600",
                                 ),
                                 Text(
                                     "Rellena el formulario de abajo para crear una cuenta.",
                                     size=12,
-                                    color="black",
+                                    color="#5c4033",
                                     weight="w400",
                                 ),
                                 Divider(height=40, color="transparent"),
@@ -69,7 +69,7 @@ def _view_():
                                     controls=[
                                         Text(
                                             "Ya tienes una cuenta?",
-                                            color="black",
+                                            color="#5c4033",
                                             size=10,
                                             weight="bold",
                                         ),
@@ -77,7 +77,7 @@ def _view_():
                                             on_click=lambda e: ChangeRoute(e, "/login"), 
                                             content=Text(
                                                 "Iniciar Sesión",
-                                                color="blue900",
+                                                color="#b85c38",
                                                 size=10,
                                                 weight="bold",
                                             ),
@@ -101,7 +101,7 @@ def _view_():
                                         "© 2024 ᓚᘏᗢ",
                                         size=10,
                                         weight="w500",
-                                        color="black",
+                                        color="#5c4033",
                                     )
                                 ]
                             )

@@ -12,7 +12,7 @@ class PostControl(UserControl):
     
     def build(self):
         return Container(
-            bgcolor="#f0f3f6",
+            bgcolor="#fff2d8",
             width=500,
             height=52,
             border_radius=6,
@@ -27,17 +27,17 @@ class PostControl(UserControl):
                             height=42,
                             width=328,
                             text_size=12,
-                            color="black",
+                            color="#5c4033",
                             border_radius=6,
-                            bgcolor="#f0f3f6",
+                            bgcolor="#fff6e5",
                             border_color="transparent",
                             filled=True,
-                            cursor_color="black",
+                            cursor_color="#5c4033",
                             cursor_width=1,
                             hint_text="Empieza escribiendo algo aqui ...",
                             hint_style=TextStyle(
                                 size=11,
-                                color="black",
+                                color="#a47551",
                             ),
                         ),
                     ),
@@ -48,13 +48,20 @@ class PostControl(UserControl):
                                 "Post",
                                 size=11,
                                 weight="bold",
+                                color="#fffaf0"
                             ),
                             style=ButtonStyle(
                                 shape={
                                     "": RoundedRectangleBorder(radius=8),
                                 },
                                 color={
-                                    "": "white",
+                                    "": "#b85c38",
+                                },
+                                bgcolor={
+                                    "": "#b85c38",
+                                },
+                                overlay_color={
+                                    "": "#91442a",
                                 },
                             ),
                             height=42,
@@ -89,9 +96,10 @@ class DisplayPost(UserControl):
     def build(self):
         return Container(
             width=500,
-            bgcolor="#f0f3f6",
+            bgcolor="#fff6e5",
             padding=15,
             border_radius=8,
+            border=border.all(1, "#e0c3a6"),
             content=Column(
                 controls=[
                     Row(
@@ -99,12 +107,12 @@ class DisplayPost(UserControl):
                             Text(
                                 value=f"{self.first_name} {self.last_name}",
                                 size=10,
-                                color="black",
+                                color="#5c4033",
                             ),
                             Text(
                                 value=f"{self.post_date}",
                                 size=10,
-                                color="black",
+                                color="#a47551",
                             ),
                         ]
                     ),
@@ -115,7 +123,7 @@ class DisplayPost(UserControl):
                                 value=self.user_post,
                                 size=11,
                                 weight="w400",
-                                color="black",
+                                color="#5c4033",
                             )
                         ],
                     ),
@@ -127,7 +135,7 @@ class DisplayPost(UserControl):
                                 icon=icons.DELETE_ROUNDED,
                                 width=26,
                                 icon_size=18,
-                                icon_color="black",
+                                icon_color="#b85c38",
                                 on_click= lambda e: self.DeletePostData(
                                     self.post_node, e
                                 )

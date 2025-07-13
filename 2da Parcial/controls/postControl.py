@@ -3,7 +3,6 @@ Aca vamos a tener dos clases de UI que manejaran los posts de usuarios
 """
 
 from flet import *
-from flet import UserControl
 import view
 
 class PostControl(UserControl):

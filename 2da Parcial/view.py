@@ -118,57 +118,102 @@ def ProfileUserData():
     return user_info
 
 # Ahora que el enrutamiento funciona, creamos un usuario con el formulario de registro
-# Esta función será activada cuando el usuario apriete el botón de registrarse en la pagina de registro
 def RegisterUser(e):
     # Aca, debemos de circular a través de la lista de vistas y elegir la pagina de registro
     for page in e.page.views[:]:
         if page.route == "/register": #page.route es el nombre de la vista
             # Aqui, debemos de acceder a los text fields
-            # res ahora está en la columna principal con la entrada
             res = page.controls[0].controls[0].content.controls[4]
+            # Obtenemos los campos para validar
+            fields_to_validate = [
+                res.controls[0].content,  # Nombre
+                res.controls[1].content,  # Apellido
+                res.controls[2].content,  # Correo
+                res.controls[3].content,  # Contraseña
+            ]
+
+            # Eliminamos validación aquí
+
+            email = res.controls[2].content.value
+            if AccountExists(email): # Revisamos si la cuenta existe en la base de datos
+                res.controls[2].content.error_text = "Esta cuenta ya existe"
+                res.controls[2].content.update()
+                return
+            
             try:
                 # usamos la API de autenticación para registrar a un nuevo usuario con email y contraseña
                 auth.create_user_with_email_and_password(
-                    res.controls[2].content.value,
-                    res.controls[3].content.value,
+                    email, res.controls[3].content.value
                 )
-                    
+
                 # Despues de crear un usuario, queremos pasar la información a la base de datos
                 data = {
                     "firstName": res.controls[0].content.value,
                     "lastName": res.controls[1].content.value,
-                    "email": res.controls[2].content.value,
+                    "email": email,
                     "pass": res.controls[3].content.value,
                 }
 
                 # Usamos child para enviar la información al nodo especifico de la base de datos
-                # Nota: Antes de escribir a la base de datos, hay que cambiar las reglas de privacidad
-                # En nuestro caso está bien, pero para una aplicación de verdad se necesesitaría más parámetros de seguridad para las reglas de la base de datos
-
                 db.child("users").push(data)
-
                 e.page.views.clear()
                 e.page.views.append(_moduleList["/login"].loader.load_module()._view_())
                 e.page.update()
-
-            except Exception as e:
-                print("Error al registrar el usuario:", e)
-            finally:
-                for item in res.controls[:]:
-                    if item.page:
-                        item.content.value = None
-                        item.content.update()
+            except Exception as error:
+                print("Error al registrar el usuario:", error)
 
 # Ahora que tenemos el registro de usuario, tenemos que realizar la UI + Lógica para la fase de logueo.
 def LogInUser(e):
-    first_name, last_name = GetUserDetail(e)
-    # Podemos obtener el nombre y apellido autenticando el correo del usuario
-    # Si no hay errores, pasamos los datos a la vista /index, y llevamos al usuario a esa pagina
-    e.page.views.clear()
-    e.page.views.append(_moduleList["/index"].loader.load_module()._view_(first_name, last_name))
-    DisplayTask(e) # llamamos la funcion aca
-    e.page.go("/index")
-    e.page.update()
+    for page in e.page.views[:]:
+        if page.route == "/login":
+            res = page.controls[0].controls[0].content.controls[4]
+            # Obtenemos los campos para validar
+            fields_to_validate = [
+                res.controls[0].content,  # Correo
+                res.controls[1].content,  # Contraseña
+            ]
+
+            # Eliminamos validación aquí
+            
+            email = res.controls[0].content.value
+            password = res.controls[1].content.value
+            
+            if not AccountExists(email):
+                res.controls[0].content.error_text = "La cuenta no existe"
+                res.controls[0].content.update()
+                return
+            
+            if not VerifyPassword(email, password):
+                res.controls[1].content.error_text = "Contraseña incorrecta"
+                res.controls[1].content.update()
+                return
+            
+            try:
+                user = auth.sign_in_with_email_and_password(email, password)
+                SESSION["users"] = user
+                val = db.child("users").get()
+                for i in val:
+                    if i.val()["email"] == user["email"]:
+                        first_name = i.val()["firstName"]
+                        last_name = i.val()["lastName"]
+                        SESSION["path"] = i.key()
+                        SESSION["firstName"] = first_name
+                        SESSION["lastName"] = last_name
+                        # Podemos obtener el nombre y apellido autenticando el correo del usuario
+                        # Si no hay errores, pasamos los datos a la vista /index, y llevamos al usuario a esa pagina
+                        e.page.views.clear()
+                        e.page.views.append(
+                            _moduleList["/index"].loader.load_module()._view_(
+                                first_name, last_name
+                            )
+                        )
+                        DisplayTask(e) # llamamos la funcion aca
+                        e.page.go("/index")
+                        e.page.update()
+                        return
+            except Exception as error:
+                print(error)
+
 
 # Crearemos otra funcion donde obtendremos y almacenaremos todos los datos importantes del usuario
 def GetUserDetail(e):
@@ -208,7 +253,7 @@ def GetUserDetail(e):
     return [None, None]
 
 # Esta funcion se encarga de la habilidad de postear textos
-def PostText(e, first_name:str, last_name:str):
+def PostText(e, first_name: str, last_name: str):
     # Obtenemos la fecha primero porque lo vamos a mostrar
     post_date = datetime.now().strftime("%b %d, %Y %I:%M")
 
@@ -217,13 +262,20 @@ def PostText(e, first_name:str, last_name:str):
             # Aca esta el indice de la entrada del post que creamos en la vista /index
             res = page.controls[0].controls[0].controls[2].controls[1].controls[0]
 
+            # Validar que el contenido del post no esté vacío
+            post_content = res.content.controls[0].content.value
+            if not post_content or post_content.strip() == "":
+                res.content.controls[0].content.error_text = "El texto no puede estar vacío"
+                res.content.controls[0].content.update()
+                return
+
             # Establecemos data en un diccionario
             # Usaremos esto dentro del UI del post
             data = {
                 "firstName": first_name,
                 "lastName": last_name,
                 "postDate": post_date,
-                "post": res.content.controls[0].content.value,
+                "post": post_content,
             }
 
             # Aca queremos pasar los datos al usuario, pero queremos pasarlo como una nueva "entidad"
@@ -242,12 +294,12 @@ def PostText(e, first_name:str, last_name:str):
             # ahora podemos mostrarlo en el indice de la columna
             page.controls[0].controls[0].controls[2].controls[3].controls.append(
                 postControl.DisplayPost(
-                    # Ahora pasamos los argumentos
+                    # Ahora Pasamos los argumentos
                     first_name,
                     last_name,
                     post_date,
-                    res.content.controls[0].content.value, # El post
-                    ref_data["name"] # La referencia en si del nodo
+                    post_content,  # El contenido del post
+                    ref_data["name"],  # La referencia en sí del nodo
                 )
             )
 
@@ -308,3 +360,71 @@ def ShowMenu(e):
             else:
                 page.controls[0].controls[0].controls[0].controls[0].width = 60
                 page.update()
+
+# Funcion para validar si es que los campos están vacíos, que la contraseña debe tener mas de 6 caracteres y que el correo debe contar con un @
+def ValidateFields(fields):
+    """
+    Validar si cualquiera de los campos está vacío, si la contraseña no cumple con los requisitos,
+    o si el correo no tiene un formato válido.
+
+    Args:
+        fields (lista): Una lista de controles TextField para validar.
+
+    Returns:
+        bool: Retorna True si todos los campos son válidos, False de otra manera.
+    """
+    is_valid = True
+    for idx, field in enumerate(fields):
+        if not field.value or field.value.strip() == "":
+            field.error_text = "Este campo es requerido"
+            field.update()
+            is_valid = False
+        elif idx == 2 and "@" not in field.value:  # Validación de correo electrónico (índice 2 es el correo)
+            field.error_text = "El correo debe contener un '@'"
+            field.update()
+            is_valid = False
+        elif idx == 3 and len(field.value) < 6:  # Validación de contraseña (índice 3 es la contraseña)
+            field.error_text = "La contraseña debe tener al menos 6 caracteres"
+            field.update()
+            is_valid = False
+        else:
+            field.error_text = None
+            field.update()
+    return is_valid
+
+# Funcion para validar si es que la cuenta existe para el registro y login
+def AccountExists(email):
+    """
+    Verifica si una cuenta con el correo designado ya existe en una base de datos.
+
+    Args:
+        email (str): El correo a verificar.
+    
+    Returns:
+        bool: True si la cuenta existe, False de otra manera.
+    """
+    users = db.child("users").get()
+    if users.val():
+        for user in users.each():
+            if user.val()["email"] == email:
+                return True
+    return False
+
+# Funcion para validar si es que la contraseña es correcta
+def VerifyPassword(email, password):
+    """
+    Verifica si la contraseña dada encaja con la contraseña almacenada en la base de datos para el correo dado.
+
+    Args:
+        email (str): El correo a verificar.
+        password (str): La contraseña a revisar.
+    
+    Returns:
+        bool: True si la contraseña es correcta, False de otra manera.
+    """
+    users = db.child("users").get()
+    if users.val():
+        for user in users.each():
+            if user.val()["email"] == email:
+                return user.val()["pass"] == password
+    return False

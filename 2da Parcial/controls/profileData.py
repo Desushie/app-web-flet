@@ -19,7 +19,7 @@ class ProfileData(UserControl):
         return Text(
             value=name,
             size=size,
-            color="black",
+            color="#5c4033",
             weight="bold",
         )
     
@@ -35,16 +35,20 @@ class ProfileData(UserControl):
                         Text(
                             "Información del Perfil de Usuario",
                             size=25,
-                            color="black",
+                            color="#5c4033",
                             weight="bold",
                         )
                     ]
                 ),
-                Divider(height=10, color="black"),
+                Divider(height=10, color="#d9b18e"),
                 Divider(height=20, color="transparent"),
                 # El primer container le mostrará al usuario los datos de cuando se creo la cuenta y el ultimo inicio de sesion
                 Container(
                     width=400,
+                    bgcolor="#fff6e5",
+                    padding=10,
+                    border_radius=8,
+                    border=border.all(1, "#e0c3a6"),
                     content=Row(
                         alignment=MainAxisAlignment.START,
                         spacing=40,

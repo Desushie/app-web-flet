@@ -5,7 +5,7 @@ Esta aplicación tiene como funcionalidad principal la ***creación de notas tip
 ## Instrucciones de ejecución o acceso.
 Pasos para ejecutar:
 1. Ir al directorio donde esta el Dockerfile y el archivo main.py
-2. Ejecutar los siguientes comandos:
+2. Ejecutar los siguientes comandos:<br/>
     docker build -t fletapp . <br/>
     docker run -p 8550:8550 fletapp
 3. Ir a http://localhost:8550/

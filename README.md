@@ -9,6 +9,11 @@ Pasos para ejecutar:
     docker build -t fletapp . <br/>
     docker run -p 8550:8550 fletapp
 3. Ir a http://localhost:8550/
+4. Credenciales para probar:<br/>
+abc123@gmail.com <br/>
+123456 <br/>
+También se puede crear una nueva cuenta según sea necesario.
+
 ## Capturas de pantalla de la ejecución y despliegue.
 - **Login**
 ![Login](Capturas/login.png)
